@@ -127,6 +127,7 @@ for(i in 1:length(countryMedalSum$team)){
 colnames(countryMedalSum) <- c("team", "Gold", "Silver", "Bronze", "None", "Total Athletes", "lat", "long") 
 
 #Write it to a csv in order to keep the siny app more simple
+
 path_out = "C:\\Users\\danbu\\Documents\\GitHub\\IST687\\Dan\\Data Cleaning Etc\\"
 fileName = paste(path_out, 'medalSums.csv',sep = '')
 write.csv(countryMedalSum,fileName)
