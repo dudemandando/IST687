@@ -119,9 +119,17 @@ countryGeo <- read.csv("C:\\Users\\danbu\\Desktop\\OlympicData\\allCountries.csv
 countryMedalSum <- countryMedalSum[match(countryGeo$name,countryMedalSum$team),]
 countryMedalSum <-na.omit(countryMedalSum)
 
+for(i in 1:length(countryMedalSum$team)){
+  countryMedalSum$lats[i] <- countryGeo[which(countryGeo$name == countryMedalSum[i,1]), 2]
+  countryMedalSum$longs[i] <- countryGeo[which(countryGeo$name == countryMedalSum[i,1]), 3]
+}
 
+colnames(countryMedalSum) <- c("team", "Gold", "Silver", "Bronze", "None", "Total Athletes", "lat", "long") 
 
-
+#Write it to a csv in order to keep the siny app more simple
+path_out = "C:\\Users\\danbu\\Documents\\GitHub\\IST687\\Dan\\Data Cleaning Etc\\"
+fileName = paste(path_out, 'medalSums.csv',sep = '')
+write.csv(countryMedalSum,fileName)
 
 
 
