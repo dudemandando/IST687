@@ -1,20 +1,24 @@
 library(shiny)
 library(leaflet)
+library(shinydashboard)
+library(scales)
 
 #install.packages("leaflet.minicharts")
 
 countryMedals <- read.csv("C:\\Users\\danbu\\Documents\\GitHub\\IST687\\Dan\\OlympicGamesMap\\OlyMap\\medalSums.csv")
-countryMedals$Gold <- countryMedals$Gold^10
-key <- "pk.eyJ1IjoiZHVkZW1hbmRhbmRvIiwiYSI6ImNqd2xqZDhkMzAwM2MzeXBmNWhjejViejUifQ.-qW3K4prGMIY0w7bP3LxUg"
-colors <- c("#4c34eb", "#eb9934", "#eb3434")
-MiniBarDf <- data.frame(countryMedals$lat, countryMedals$long, countryMedals$Gold, countryMedals$Silver, countryMedals$Bronze)
 
 
-r_colors <- rgb(t(col2rgb(colors()) / 255))
-names(r_colors) <- colors()
+
+colors <- c("#FFFF33", "#CECCB7", "#EE9A25")
+MiniBarDf <- data.frame(countryMedals$Gold, countryMedals$Silver, countryMedals$Bronze)
+colnames(MiniBarDf) <- c("Gold", "Silver", "Bronze")
+MiniBarDf <- MiniBarDf
+scaledTotalAthletes <- rescale(countryMedals$Total.Athletes, to = c(100000,750000))
+
+
 
 ui <- dashboardPage(
-    
+    dashboardHeader(title = "IST 687 - Olympic "),
     dashboardSidebar(
         sidebarMenu(
             menuItem(
@@ -41,31 +45,30 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
     
- 
-    
     output$map <- renderLeaflet({
         leaflet() %>%
             addTiles(group="OSM")%>%
-            setView(lat = 43.191558,
-                    lng = 16.089341,
+            setView(lat = 40.459152,
+                    lng =  49.426570,
                     zoom = 4
             ) %>% 
             addCircles(lng=countryMedals$long, 
                        lat=countryMedals$lat,
-                       radius=countryMedals$Total.Athletes*50, 
-                       popup=paste("Total Athletes", as.character(countryMedals$Total.Athletes, " ")),
-                       color = countryMedals$Total.Athletes,
+                       radius=scaledTotalAthletes, 
+                       popup=paste(countryMedals$team,"Total Athletes", as.character(countryMedals$Total.Athletes, " ")),
+                       color = "blue",
+                       fillOpacity = 0.1,
                        stroke=FALSE
             )%>%
-            addMarkers(lng=countryMedals$long, 
-                       lat=countryMedals$lat,
-                       popup=paste(countryMedals$team),
-                    
-            )
+            addMinicharts(countryMedals$long,
+                          countryMedals$lat,
+                          type = "pie", 
+                          chartdata = MiniBarDf, 
+                          colorPalette = colors, 
+                          legend = TRUE, 
+                          legendPosition = "topright",
+                          width = 20, height = 20)
                         
-        
-        
-            
     })
 }
 
