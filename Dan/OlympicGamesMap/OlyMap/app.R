@@ -4,7 +4,7 @@ library(shinydashboard)
 library(scales)
 
 #install.packages("leaflet.minicharts")
-
+#https://rstudio.github.io/leaflet/markers.html#circle-markers
 countryMedals <- read.csv("C:\\Users\\danbu\\Documents\\GitHub\\IST687\\Dan\\OlympicGamesMap\\OlyMap\\medalSums.csv")
 
 
