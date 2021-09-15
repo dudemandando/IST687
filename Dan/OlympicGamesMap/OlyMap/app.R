@@ -2,6 +2,7 @@ library(shiny)
 library(leaflet)
 library(shinydashboard)
 library(scales)
+library(leaflet.minicharts)
 
 #install.packages("leaflet.minicharts")
 #https://rstudio.github.io/leaflet/markers.html#circle-markers
@@ -18,7 +19,7 @@ scaledTotalAthletes <- rescale(countryMedals$Total.Athletes, to = c(100000,75000
 
 
 ui <- dashboardPage(
-    dashboardHeader(title = "IST 687 - Olympic "),
+    dashboardHeader(title = "IST 687 - Olympics"),
     dashboardSidebar(
         sidebarMenu(
             menuItem(
@@ -32,8 +33,8 @@ ui <- dashboardPage(
                 "Charts", 
                 tabName = "charts", 
                 icon = icon("bar-chart"),
-                menuSubItem("Watersheds", tabName = "c_water", icon = icon("area-chart")),
-                menuSubItem("Population", tabName = "c_pop", icon = icon("area-chart"))
+                menuSubItem("Countries", tabName = "c_Countries", icon = icon("area-chart")),
+                menuSubItem("Total Athletes", tabName = "c_Total_Athletes", icon = icon("area-chart"))
             )
         )
     ),
@@ -56,8 +57,8 @@ server <- function(input, output, session) {
                        lat=countryMedals$lat,
                        radius=scaledTotalAthletes, 
                        popup=paste(countryMedals$team,"Total Athletes", as.character(countryMedals$Total.Athletes, " ")),
-                       color = "blue",
-                       fillOpacity = 0.1,
+                       color = "#3462eb",
+                       fillOpacity = 0.15,
                        stroke=FALSE
             )%>%
             addMinicharts(countryMedals$long,
